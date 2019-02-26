@@ -307,7 +307,7 @@ public class ProvisioningClientJVMRunner extends IntegrationTest
         String currentDirectory = System.getProperty("user.dir");
         Path currentPath = Paths.get(currentDirectory);
         Path baseDirectory = currentPath.getParent().getParent();
-        String tpmSimulatorDirectory = baseDirectory.toString() + "\\provisioning\\provisioning-tools\\tpm-simulator\\";
+        String tpmSimulatorDirectory = baseDirectory.toString() + "/provisioning/provisioning-tools/tpm-simulator/";
         Process tpmSimulatorProcess = Runtime.getRuntime().exec(tpmSimulatorDirectory + "Simulator.exe", null, new File(tpmSimulatorDirectory));
 
 
