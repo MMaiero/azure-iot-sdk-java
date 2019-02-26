@@ -31,7 +31,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import javax.net.ssl.SSLHandshakeException;
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static com.microsoft.azure.sdk.iot.provisioning.device.ProvisioningDeviceClientStatus.PROVISIONING_DEVICE_STATUS_ASSIGNED;
@@ -300,6 +304,13 @@ public class ProvisioningClientJVMRunner extends IntegrationTest
             return;
         }
 
+        String currentDirectory = System.getProperty("user.dir");
+        Path currentPath = Paths.get(currentDirectory);
+        Path baseDirectory = currentPath.getParent().getParent();
+        String tpmSimulatorDirectory = baseDirectory.toString() + "\\provisioning\\provisioning-tools\\tpm-simulator\\";
+        Process tpmSimulatorProcess = Runtime.getRuntime().exec(tpmSimulatorDirectory + "Simulator.exe", null, new File(tpmSimulatorDirectory));
+
+
         String registrationId = REGISTRATION_ID_TPM_PREFIX + UUID.randomUUID().toString();
 
         SecurityProvider securityProviderTPMEmulator = null;
@@ -377,5 +388,7 @@ public class ProvisioningClientJVMRunner extends IntegrationTest
         deleteDeviceFromIotHub(deviceID);
         ((SecurityProviderTPMEmulator) securityProviderTPMEmulator).shutDown();
         System.out.println("Running TPM registration over " + testInstance.protocol + " succeeded");
+
+        tpmSimulatorProcess.destroy();
     }
 }
