@@ -389,6 +389,6 @@ public class ProvisioningClientJVMRunner extends IntegrationTest
         ((SecurityProviderTPMEmulator) securityProviderTPMEmulator).shutDown();
         System.out.println("Running TPM registration over " + testInstance.protocol + " succeeded");
 
-        tpmSimulatorProcess.destroy();
+        //tpmSimulatorProcess.destroy();
     }
 }
