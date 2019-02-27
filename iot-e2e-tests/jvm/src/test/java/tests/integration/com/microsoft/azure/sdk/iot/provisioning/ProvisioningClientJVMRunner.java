@@ -295,7 +295,7 @@ public class ProvisioningClientJVMRunner extends IntegrationTest
         registryManager.removeDevice(deviceId);
     }
 
-    @Test (timeout = OVERALL_TEST_TIMEOUT)
+    @Test (timeout = 60 * 1000)
     public void individualEnrollmentTPMSimulator() throws Exception
     {
         if (testInstance.protocol == MQTT || testInstance.protocol == MQTT_WS)
@@ -304,11 +304,11 @@ public class ProvisioningClientJVMRunner extends IntegrationTest
             return;
         }
 
-        String currentDirectory = System.getProperty("user.dir");
-        Path currentPath = Paths.get(currentDirectory);
-        Path baseDirectory = currentPath.getParent().getParent();
-        String tpmSimulatorDirectory = baseDirectory.toString() + "/provisioning/provisioning-tools/tpm-simulator/";
-        Process tpmSimulatorProcess = Runtime.getRuntime().exec(tpmSimulatorDirectory + "Simulator.exe", null, new File(tpmSimulatorDirectory));
+        //String currentDirectory = System.getProperty("user.dir");
+        //Path currentPath = Paths.get(currentDirectory);
+        //Path baseDirectory = currentPath.getParent().getParent();
+        //String tpmSimulatorDirectory = baseDirectory.toString() + "/provisioning/provisioning-tools/tpm-simulator/";
+        //Process tpmSimulatorProcess = Runtime.getRuntime().exec(tpmSimulatorDirectory + "Simulator.exe", null, new File(tpmSimulatorDirectory));
 
 
         String registrationId = REGISTRATION_ID_TPM_PREFIX + UUID.randomUUID().toString();
