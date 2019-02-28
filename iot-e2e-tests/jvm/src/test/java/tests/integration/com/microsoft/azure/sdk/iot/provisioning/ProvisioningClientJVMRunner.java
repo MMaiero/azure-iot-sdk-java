@@ -295,7 +295,7 @@ public class ProvisioningClientJVMRunner extends IntegrationTest
         registryManager.removeDevice(deviceId);
     }
 
-    @Test (timeout = 60 * 1000)
+    @Test (timeout = 120 * 1000)
     public void individualEnrollmentTPMSimulator() throws Exception
     {
         if (testInstance.protocol == MQTT || testInstance.protocol == MQTT_WS)
@@ -304,16 +304,9 @@ public class ProvisioningClientJVMRunner extends IntegrationTest
             return;
         }
 
-        //String currentDirectory = System.getProperty("user.dir");
-        //Path currentPath = Paths.get(currentDirectory);
-        //Path baseDirectory = currentPath.getParent().getParent();
-        //String tpmSimulatorDirectory = baseDirectory.toString() + "/provisioning/provisioning-tools/tpm-simulator/";
-        //Process tpmSimulatorProcess = Runtime.getRuntime().exec(tpmSimulatorDirectory + "Simulator.exe", null, new File(tpmSimulatorDirectory));
-
-
         String registrationId = REGISTRATION_ID_TPM_PREFIX + UUID.randomUUID().toString();
 
-        SecurityProvider securityProviderTPMEmulator = null;
+        SecurityProviderTPMEmulator securityProviderTPMEmulator = null;
         long startTime = System.currentTimeMillis();
         while (securityProviderTPMEmulator == null)
         {
@@ -329,6 +322,7 @@ public class ProvisioningClientJVMRunner extends IntegrationTest
             catch (Exception e)
             {
                 System.out.println("Encountered exception while connecting to TPM, trying again: \n");
+
                 e.printStackTrace();
 
                 //2 second buffer before attempting to connect again
@@ -386,7 +380,7 @@ public class ProvisioningClientJVMRunner extends IntegrationTest
         // delete enrollment
         deleteEnrollment(registrationId);
         deleteDeviceFromIotHub(deviceID);
-        ((SecurityProviderTPMEmulator) securityProviderTPMEmulator).shutDown();
+        securityProviderTPMEmulator.shutDown();
         System.out.println("Running TPM registration over " + testInstance.protocol + " succeeded");
 
         //tpmSimulatorProcess.destroy();
