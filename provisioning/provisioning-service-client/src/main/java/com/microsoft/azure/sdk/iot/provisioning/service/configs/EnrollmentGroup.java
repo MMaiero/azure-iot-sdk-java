@@ -12,6 +12,7 @@ import com.microsoft.azure.sdk.iot.provisioning.service.exceptions.ProvisioningS
 import com.microsoft.azure.sdk.iot.provisioning.service.ProvisioningServiceClient;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Representation of a single Device Provisioning Service enrollment group with a JSON serializer and deserializer.
@@ -137,6 +138,30 @@ public class EnrollmentGroup extends Serializable
     @Expose(serialize = true, deserialize = true)
     @SerializedName(ETAG_TAG)
     private String etag;
+
+    // the reprovisioning policy
+    private static final String REPROVISION_POLICY_TAG = "reprovisionPolicy";
+    @Expose(serialize = true, deserialize = true)
+    @SerializedName(REPROVISION_POLICY_TAG)
+    private ReprovisionPolicy reprovisionPolicy;
+
+    // the custom allocation definition
+    private static final String CUSTOM_ALLOCATION_DEFINITION_TAG = "customAllocationDefinition";
+    @Expose(serialize = true, deserialize = true)
+    @SerializedName(CUSTOM_ALLOCATION_DEFINITION_TAG)
+    private CustomAllocationDefinition customAllocationDefinition;
+
+    // the allocation policy of the resource. overrides the tenant level allocation policy
+    private static final String ALLOCATION_POLICY_TAG = "allocationPolicy";
+    @Expose(serialize = true, deserialize = true)
+    @SerializedName(ALLOCATION_POLICY_TAG)
+    private AllocationPolicy allocationPolicy;
+
+    // the list of names of IoT hubs the device in this resource can be allocated to. Must be a subset of tenant level list of IoT hubs
+    private static final String IOT_HUBS_TAG = "iotHubs";
+    @Expose(serialize = true, deserialize = true)
+    @SerializedName(IOT_HUBS_TAG)
+    private List<String> iotHubs;
 
     /**
      * CONSTRUCTOR
@@ -691,6 +716,86 @@ public class EnrollmentGroup extends Serializable
 
         /* SRS_ENROLLMENT_GROUP_21_037: [The setEtag shall store the provided etag.] */
         this.etag = etag;
+    }
+
+    /**
+     * Getter for the reprovision policy.
+     *
+     * @return The {@code ReprovisionPolicy} with the reprovisionPolicy content.
+     */
+    public ReprovisionPolicy getReprovisionPolicy()
+    {
+        return this.reprovisionPolicy;
+    }
+
+    /**
+     * Setter for the reprovision policy.
+     *
+     * @param reprovisionPolicy the {@code ReprovisionPolicy} with the behavior when a device is re-provisioned to an IoT hub.
+     */
+    public void setReprovisionPolicy(ReprovisionPolicy reprovisionPolicy)
+    {
+        this.reprovisionPolicy = reprovisionPolicy;
+    }
+
+    /**
+     * Getter for the allocation policy.
+     *
+     * @return The {@code AllocationPolicy} with the allocationPolicy content.
+     */
+    public AllocationPolicy getAllocationPolicy()
+    {
+        return this.allocationPolicy;
+    }
+
+    /**
+     * Setter for the allocation policy.
+     *
+     * @param allocationPolicy the {@code AllocationPolicy} with the allocation policy of this resource. Overrides the tenant level allocation policy.
+     */
+    public void setAllocationPolicy(AllocationPolicy allocationPolicy)
+    {
+        this.allocationPolicy = allocationPolicy;
+    }
+
+    /**
+     * Getter for the list of IoTHub names that the device can be allocated to..
+     *
+     * @return The {@code AllocationPolicy} with the allocationPolicy content.
+     */
+    public List<String> getIotHubs()
+    {
+        return this.iotHubs;
+    }
+
+    /**
+     * Setter for the list of IotHubs available for allocation.
+     *
+     * @param iotHubs the {@code List<String>} of names of IoT hubs the device(s) in this resource can be allocated to. Must be a subset of tenant level list of IoT hubs
+     */
+    public void setIotHubs(List<String> iotHubs)
+    {
+        this.iotHubs = iotHubs;
+    }
+
+    /**
+     * Getter for the custom allocation definition policy.
+     *
+     * @return The {@code CustomAllocationDefinition} policy.
+     */
+    public CustomAllocationDefinition getCustomAllocationDefinition()
+    {
+        return this.customAllocationDefinition;
+    }
+
+    /**
+     * Setter for the custom allocation definition policy.
+     *
+     * @param customAllocationDefinition the {@code CustomAllocationDefinition} with the custom allocation policy of this resource.
+     */
+    public void setCustomAllocationDefinition(CustomAllocationDefinition customAllocationDefinition)
+    {
+        this.customAllocationDefinition = customAllocationDefinition;
     }
 
     /**
