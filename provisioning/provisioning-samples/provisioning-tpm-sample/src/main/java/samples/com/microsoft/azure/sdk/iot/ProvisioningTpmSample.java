@@ -13,7 +13,7 @@ import com.microsoft.azure.sdk.iot.provisioning.device.*;
 import com.microsoft.azure.sdk.iot.provisioning.device.internal.exceptions.ProvisioningDeviceClientException;
 import com.microsoft.azure.sdk.iot.provisioning.security.SecurityProviderTpm;
 import com.microsoft.azure.sdk.iot.provisioning.security.exceptions.SecurityProviderException;
-import com.microsoft.azure.sdk.iot.provisioning.security.hsm.SecurityProviderTPMEmulator;
+import com.microsoft.azure.sdk.iot.provisioning.security.hsm.SecurityProviderTPMHsm;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -23,8 +23,8 @@ import java.util.Scanner;
  */
 public class ProvisioningTpmSample
 {
-    private static final String SCOPE_ID = "[Your scope ID here]";
-    private static final String GLOBAL_ENDPOINT = "[Your Provisioning Service Global Endpoint here]";
+    private static final String SCOPE_ID = "0ne0003F26F";
+    private static final String GLOBAL_ENDPOINT = "global.azure-devices-provisioning.net";
     private static final ProvisioningDeviceClientTransportProtocol PROVISIONING_DEVICE_CLIENT_TRANSPORT_PROTOCOL = ProvisioningDeviceClientTransportProtocol.HTTPS;
     //private static final ProvisioningDeviceClientTransportProtocol PROVISIONING_DEVICE_CLIENT_TRANSPORT_PROTOCOL = ProvisioningDeviceClientTransportProtocol.MQTT;
     //private static final ProvisioningDeviceClientTransportProtocol PROVISIONING_DEVICE_CLIENT_TRANSPORT_PROTOCOL = ProvisioningDeviceClientTransportProtocol.MQTT_WS;
@@ -75,7 +75,7 @@ public class ProvisioningTpmSample
 
         try
         {
-            securityClientTPMEmulator = new SecurityProviderTPMEmulator();
+            securityClientTPMEmulator = new SecurityProviderTPMHsm();
             System.out.println("Endorsement Key : \n" + new String(Base64.encodeBase64Local(securityClientTPMEmulator.getEndorsementKey())));
             System.out.println("Registration Id : \n" + securityClientTPMEmulator.getRegistrationId());
             System.out.println("Please visit Azure Portal (https://portal.azure.com/) and create a TPM Individual Enrollment with the information above i.e EndorsementKey and RegistrationId \n" +

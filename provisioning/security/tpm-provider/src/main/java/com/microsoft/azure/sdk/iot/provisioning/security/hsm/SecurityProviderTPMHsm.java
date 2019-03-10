@@ -12,7 +12,16 @@ import com.microsoft.azure.sdk.iot.provisioning.security.exceptions.SecurityProv
 import tss.*;
 import tss.tpm.*;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 public class SecurityProviderTPMHsm extends SecurityProviderTpm
 {
@@ -335,9 +344,16 @@ public class SecurityProviderTPMHsm extends SecurityProviderTpm
 
         //SRS_SecurityProviderTPMHsm_25_026: [ This method shall Encrypt Decrypt the symmetric Key. ]
         //TODO : Use software encryption/decryption using AES instead of TPM command to support international markets.
-        EncryptDecrypt2Response edResp = tpm.EncryptDecrypt2(hSymKey, encUriData.buffer, (byte)1, TPM_ALG_ID.CFB, iv);
+        String response = null;
+		try {
+			response = SecurityProviderTPMHsm.decrypt(innerWrapKey,  encUriData.buffer, iv);
+		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+        //EncryptDecrypt2Response edResp = tpm.EncryptDecrypt2(hSymKey, encUriData.buffer, (byte)1, TPM_ALG_ID.CFB, iv);
 
-        if (edResp == null)
+        if (response == null)
         {
             //SRS_SecurityProviderTPMHsm_25_0027: [ This method shall throw if Encrypt Decrypt the symmetric Key fails. ]
             throw new SecurityProviderException("EncryptDecryptResponse cannot be null");
@@ -347,6 +363,25 @@ public class SecurityProviderTPMHsm extends SecurityProviderTpm
         tpm.FlushContext(hSymKey);
         return null;
     }
+    
+    public static String decrypt(byte[] key, byte[] encryptedEncodedData, byte[] ivBytes) throws NoSuchAlgorithmException, NoSuchPaddingException,
+    InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+
+      try{
+          IvParameterSpec iv = new IvParameterSpec(ivBytes);
+          SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
+
+          Cipher cipher = Cipher.getInstance("AES/CFB/NoPadding");
+          cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+
+          return new String(cipher.doFinal(encryptedEncodedData));
+
+      }  catch (Exception e) {
+            System.err.println("Caught Exception: " + e.getMessage());
+      }
+
+      return null;
+ }
 
     /**
      * This method signs the TPM with the provided device ID

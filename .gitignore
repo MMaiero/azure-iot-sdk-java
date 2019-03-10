@@ -226,3 +226,4 @@ vertx.log.lck
 **/gradlew*
 **/.gradle
 **/build
+/.metadata/

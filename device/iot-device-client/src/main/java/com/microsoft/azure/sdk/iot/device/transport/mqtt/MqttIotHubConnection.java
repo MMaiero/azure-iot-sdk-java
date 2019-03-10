@@ -155,6 +155,7 @@ public class MqttIotHubConnection implements IotHubTransportConnection, MqttMess
                 {
                     host = this.config.getIotHubHostname();
                 }
+                
                  if (this.config.isUseWebsocket())
                 {
                     //Codes_SRS_MQTTIOTHUBCONNECTION_25_018: [The function shall establish an MQTT WS connection with a server uri as wss://<hostName>/$iothub/websocket?iothub-no-client-cert=true if websocket was enabled.]
