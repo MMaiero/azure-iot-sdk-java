@@ -28,6 +28,8 @@ public class HttpsHsmClient
 {
     private String baseUrl;
     private String scheme;
+    
+    private URLStreamHandlerFactory fac;
 
     private static final String HTTPS_SCHEME = "https";
     private static final String HTTP_SCHEME = "http";
@@ -53,7 +55,7 @@ public class HttpsHsmClient
         {
             // Codes_SRS_HSMHTTPCLIENT_34_012: [If the provided baseUrl uses the unix scheme, this constructor shall set
             // a stub url stream handler factory to handle that unix scheme.]
-            URLStreamHandlerFactory fac = new URLStreamHandlerFactory()
+            fac = new URLStreamHandlerFactory()
             {
                 @Override
                 public URLStreamHandler createURLStreamHandler(String protocol)
@@ -195,7 +197,11 @@ public class HttpsHsmClient
         URL requestUrl;
         if (queryString != null && !queryString.isEmpty())
         {
-            requestUrl = new URL(baseUri + path + "?" + queryString);
+            if (baseUri.startsWith(UNIX_SCHEME)) {
+            requestUrl = new URL(null, baseUri + path + "?" + queryString, fac.createURLStreamHandler(UNIX_SCHEME));
+            } else {
+                requestUrl = new URL(baseUri + path + "?" + queryString);
+            }
         }
         else
         {
