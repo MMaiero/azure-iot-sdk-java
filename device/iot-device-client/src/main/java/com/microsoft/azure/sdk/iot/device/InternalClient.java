@@ -241,6 +241,34 @@ public class InternalClient
     }
 
     /**
+     * Sends reported properties with a callback
+     *
+     * @param reportedProperties the Set for desired properties and their corresponding callback and context. Cannot be {@code null}.
+     *
+     * @throws IOException if called when client is not opened or called before starting twin.
+     * @throws IllegalArgumentException if reportedProperties is null or empty.
+     */
+    public void sendReportedProperties(Set<Property> reportedProperties, IotHubEventCallback callback) throws IOException, IllegalArgumentException
+    {
+        if (this.twin == null)
+        {
+            throw new IOException("Start twin before using it");
+        }
+
+        if (!this.deviceIO.isOpen())
+        {
+            throw new IOException("Open the client connection before using it.");
+        }
+
+        if (reportedProperties == null || reportedProperties.isEmpty())
+        {
+            throw new IllegalArgumentException("Reported properties set cannot be null or empty.");
+        }
+
+        this.twin.updateReportedProperties(reportedProperties, null, callback, reportedProperties);
+    }
+    
+    /**
      * Sends reported properties
      *
      * @param reportedProperties the Set for desired properties and their corresponding callback and context. Cannot be {@code null}.

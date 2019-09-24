@@ -324,8 +324,13 @@ public class DeviceTwin
     {
         this.updateReportedProperties(reportedProperties, null);
     }
-
+    
     public synchronized void updateReportedProperties(Set<Property> reportedProperties, Integer version) throws IOException
+    {
+        updateReportedProperties(reportedProperties, version, new deviceTwinRequestMessageCallback(), null);
+    }
+
+    public synchronized void updateReportedProperties(Set<Property> reportedProperties, Integer version, IotHubEventCallback callback, Object callbackContext) throws IOException
     {
         if (reportedProperties == null)
         {
@@ -383,7 +388,7 @@ public class DeviceTwin
         /*
          **Codes_SRS_DEVICETWIN_25_015: [**This method shall send the message to the lower transport layers by calling sendEventAsync.**]**
          */
-        this.deviceIO.sendEventAsync(updateReportedPropertiesRequest, new deviceTwinRequestMessageCallback(), null, this.config.getDeviceId());
+        this.deviceIO.sendEventAsync(updateReportedPropertiesRequest, callback, callbackContext, this.config.getDeviceId());
 
     }
 
