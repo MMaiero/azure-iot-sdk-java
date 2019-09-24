@@ -244,6 +244,7 @@ public class InternalClient
      * Sends reported properties with a callback
      *
      * @param reportedProperties the Set for desired properties and their corresponding callback and context. Cannot be {@code null}.
+     * @param callback the corresponding callback to be invoked
      *
      * @throws IOException if called when client is not opened or called before starting twin.
      * @throws IllegalArgumentException if reportedProperties is null or empty.
